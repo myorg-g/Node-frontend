@@ -1,16 +1,20 @@
-# Step 1: Use an official Node.js image as the base
+# Use the official Node.js 16 Alpine image as a base image
 FROM node:16-alpine
 
-# Step 2: Set the working directory inside the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Step 3: Copy the current directory contents into the container at /app
+# Copy the package.json and package-lock.json files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --production
+
+# Copy the rest of the application code to the container
 COPY . .
-# Step 5: Expose the port the app runs on
-EXPOSE 8080
 
-# Step 6: Start a simple HTTP server to serve the static files
-RUN npm install -g http-server
+# Expose the port that the app runs on
+EXPOSE 8000
 
-# Step 7: Command to run the app
-CMD ["http-server", "-p", "8080"]
+# Command to run the application
+CMD ["node", "server.js"]
